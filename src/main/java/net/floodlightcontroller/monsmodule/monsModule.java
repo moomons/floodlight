@@ -16,9 +16,10 @@ import net.floodlightcontroller.core.module.FloodlightModuleContext;
 import net.floodlightcontroller.core.module.FloodlightModuleException;
 import net.floodlightcontroller.core.module.IFloodlightModule;
 import net.floodlightcontroller.core.module.IFloodlightService;
-import net.floodlightcontroller.packet.Ethernet;
+import net.floodlightcontroller.packet.*;
 import org.projectfloodlight.openflow.protocol.OFMessage;
 import org.projectfloodlight.openflow.protocol.OFType;
+import org.projectfloodlight.openflow.types.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -97,17 +98,99 @@ public class monsModule implements IOFMessageListener, IFloodlightModule {
         // TODO: Definitely! This is exactly what I want!
         // Link; https://floodlight.atlassian.net/wiki/display/floodlightcontroller/How+to+Process+a+Packet-In+Message
 
-        Ethernet eth =
-                IFloodlightProviderService.bcStore.get(cntx,
-                        IFloodlightProviderService.CONTEXT_PI_PAYLOAD);
+//        Ethernet eth =
+//                IFloodlightProviderService.bcStore.get(cntx,
+//                        IFloodlightProviderService.CONTEXT_PI_PAYLOAD);
+//        Long sourceMACHash = eth.getSourceMACAddress().getLong();
+//        if (!macAddresses.contains(sourceMACHash)) {
+//            macAddresses.add(sourceMACHash);
+//            logger.info("MAC Address: {} seen on switch: {}",
+//                    eth.getSourceMACAddress().toString(),
+//                    sw.getId().toString());
+//        }
 
-        Long sourceMACHash = eth.getSourceMACAddress().getLong();
-        if (!macAddresses.contains(sourceMACHash)) {
-            macAddresses.add(sourceMACHash);
-            logger.info("MAC Address: {} seen on switch: {}",
-                    eth.getSourceMACAddress().toString(),
-                    sw.getId().toString());
+        switch (msg.getType()) {
+            case PACKET_IN:
+                /* Retrieve the deserialized packet in message */
+                Ethernet eth = IFloodlightProviderService.bcStore.get(cntx, IFloodlightProviderService.CONTEXT_PI_PAYLOAD);
+
+                /* Various getters and setters are exposed in Ethernet */
+                MacAddress srcMac = eth.getSourceMACAddress();
+                VlanVid vlanId = VlanVid.ofVlan(eth.getVlanID());
+
+                /*
+                 * Check the ethertype of the Ethernet frame and retrieve the appropriate payload.
+                 * Note the shallow equality check. EthType caches and reuses instances for valid types.
+                 */
+                if (eth.getEtherType() == EthType.IPv4) {
+                    /* We got an IPv4 packet; get the payload from Ethernet */
+                    IPv4 ipv4 = (IPv4) eth.getPayload();
+
+                    /* Various getters and setters are exposed in IPv4 */
+                    byte[] ipOptions = ipv4.getOptions();
+                    IPv4Address dstIp = ipv4.getDestinationAddress();
+
+                    /*
+                     * Check the IP protocol version of the IPv4 packet's payload.
+                     * Note the deep equality check. Unlike EthType, IpProtocol does
+                     * not cache valid/common types; thus, all instances are unique.
+                     */
+                    if (ipv4.getProtocol().equals(IpProtocol.TCP)) {
+                        /* We got a TCP packet; get the payload from IPv4 */
+                        TCP tcp = (TCP) ipv4.getPayload();
+
+                        /* Various getters and setters are exposed in TCP */
+                        TransportPort srcPort = tcp.getSourcePort();
+                        TransportPort dstPort = tcp.getDestinationPort();
+                        short flags = tcp.getFlags();
+
+                        /* Your logic here! */
+                        logger.info("TCP Packet: sourcePort {}, destPort {}",
+                                srcPort.getPort(),
+                                dstPort.getPort());
+
+                        if (dstPort.getPort() == 13562) {
+                            logger.info("TCP Packet: destPort 13562 and HTTP GET detected, will send this info to ",
+                                    srcPort.getPort(),
+                                    dstPort.getPort());
+
+                            logger.info("TCP Payload: {}",
+                                    tcp.getPayload());
+                        }
+
+                    } else if (ipv4.getProtocol().equals(IpProtocol.UDP)) {
+                        /* We got a UDP packet; get the payload from IPv4 */
+                        UDP udp = (UDP) ipv4.getPayload();
+
+                        /* Various getters and setters are exposed in UDP */
+                        TransportPort srcPort = udp.getSourcePort();
+                        TransportPort dstPort = udp.getDestinationPort();
+
+                        /* Your logic here! */
+                    }
+
+                } else if (eth.getEtherType() == EthType.ARP) {
+                    /* We got an ARP packet; get the payload from Ethernet */
+                    ARP arp = (ARP) eth.getPayload();
+
+                    /* Various getters and setters are exposed in ARP */
+                    boolean gratuitous = arp.isGratuitous();
+
+                    logger.info("ARP Packet. MAC Address: {} seen on switch: {}",
+                            eth.getSourceMACAddress().toString(),
+                            sw.getId().toString());
+
+                } else {
+                    logger.info("Unhandled ethertype. MAC Address: {} seen on switch: {}",
+                            eth.getSourceMACAddress().toString(),
+                            sw.getId().toString());
+                    /* Unhandled ethertype */
+                }
+                break;
+            default:
+                break;
         }
+
         return Command.CONTINUE;
     }
 
