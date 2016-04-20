@@ -151,10 +151,17 @@ public class monsModule implements IOFMessageListener, IFloodlightModule {
                                     srcPort.getPort(),
                                     dstPort.getPort());
 
-                            Data data = (Data) tcp.getPayload();
+//                            Data data = (Data) tcp.getPayload();
+
+                            Data pktData = null;
+                            IPacket payloadPkt = tcp.getPayload();
+                            if (payloadPkt != null && payloadPkt instanceof Data) {
+                                pktData = (Data) payloadPkt;
+                            }
 
                             logger.info("TCP Payload: {}",
-                                    Arrays.toString(data.serialize()));
+                                    Arrays.toString(pktData.getData()));
+
                             // TODO: This tcp.getPayload() is not getting desired output.
                             // Better try on local mininet vm environment AND DEBUG STOP here. More efficient.
                             //
