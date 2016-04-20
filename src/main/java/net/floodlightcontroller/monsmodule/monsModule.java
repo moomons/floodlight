@@ -23,10 +23,7 @@ import org.projectfloodlight.openflow.types.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentSkipListSet;
 
 public class monsModule implements IOFMessageListener, IFloodlightModule {
@@ -157,9 +154,9 @@ public class monsModule implements IOFMessageListener, IFloodlightModule {
                             Data data = (Data) tcp.getPayload();
 
                             logger.info("TCP Payload: {}",
-                                    data.serialize());
+                                    Arrays.toString(data.serialize()));
                             // TODO: This tcp.getPayload() is not getting desired output.
-                            // Better try on local mininet vm environment. More efficient.
+                            // Better try on local mininet vm environment AND DEBUG STOP here. More efficient.
                             //
                             // On Mininet VM:
                             // sudo mn --controller=remote --ip=HOST_IP --switch ovsk,protocols=OpenFlow13
