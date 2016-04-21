@@ -154,15 +154,16 @@ public class monsModule implements IOFMessageListener, IFloodlightModule {
 
                             // Check "mapOutput" as keyword, if not, DO NOT send POST to Python Controller.
                             if (payload.startsWith("GET /mapOutput?")) {
-                                int end = payload.indexOf(" HTTP/1.1");
-                                logger.info("Sending JSON: srcPort: {}, payload: {}",
-                                        srcPort.getPort(),
-                                        payload.substring(15, end));
+                                String pltosend = payload.substring(15, payload.indexOf(" HTTP/1.1"));
+                                logger.info("Sending JSON: srcPort: {}, payload: {}", srcPort.getPort(), pltosend);
 
                                 // Desired output:
-                                // Source port, job=job_1461107404635_0002, map=attempt_1461107404635_0002_m_000021_0
+                                // srcPort: 54321, job: job_1461107404635_0002, reduce: 0, map: attempt_1461107404635_0002_m_000021_0
 
-                                // TODO: Import SDNReport module and send json to PythonCon
+                                // Import SDNReport module and send json to PythonCon
+                                // mons: Code to play with the SDN
+                                FLReport.doPost(srcPort.getPort(), pltosend);
+                                // mons: Code END
                             }
 
                         }
