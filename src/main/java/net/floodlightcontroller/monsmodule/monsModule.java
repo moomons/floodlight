@@ -145,18 +145,19 @@ public class monsModule implements IOFMessageListener, IFloodlightModule {
 //                        logger.info("TCP Packet: sourcePort {}, destPort {}", srcPort.getPort(), dstPort.getPort()); // Too verbose if this line exist
 
                         if (dstPort.getPort() == 13562) {
-                            logger.info("TCP Packet with srcPort {}, destPort {}. Sending to PythonCon",
-                                    srcPort.getPort(), dstPort.getPort());
+//                            logger.info("TCP Packet with srcPort {}, destPort {} detected.",
+//                                    srcPort.getPort(), dstPort.getPort());
 
                             Data data = (Data) tcp.getPayload();
+                            String payload = new String(data.getData());
+//                            logger.info("TCP Payload: {}", payload);
 
-//                            Data pktData = null;
-//                            IPacket payloadPkt = tcp.getPayload();
-//                            if (payloadPkt != null && payloadPkt instanceof Data) {
-//                                pktData = (Data) payloadPkt;
-//                            }
-
-                            logger.info("TCP Payload: {}", Arrays.toString(data.getData()));
+                            if (payload.startsWith("GET /mapOutput?")) {
+                                int firstNewLine = payload.indexOf('\n');
+                                logger.info("Sending JSON: srcPort: {}, payload: {}",
+                                        srcPort.getPort(),
+                                        payload.substring(15, firstNewLine));
+                            }
 
                             // TODO: This tcp.getPayload() is not getting desired output.
                             // Better try on local mininet vm environment AND DEBUG STOP here. More efficient.
@@ -191,14 +192,14 @@ public class monsModule implements IOFMessageListener, IFloodlightModule {
                     /* Various getters and setters are exposed in ARP */
                     boolean gratuitous = arp.isGratuitous();
 
-                    logger.info("ARP Packet. MAC Address: {} seen on switch: {}",
-                            eth.getSourceMACAddress().toString(),
-                            sw.getId().toString());
+//                    logger.info("ARP Packet. MAC Address: {} seen on switch: {}",
+//                            eth.getSourceMACAddress().toString(),
+//                            sw.getId().toString());
 
                 } else {
-                    logger.info("Unhandled ethertype. MAC Address: {} seen on switch: {}",
-                            eth.getSourceMACAddress().toString(),
-                            sw.getId().toString());
+//                    logger.info("Unhandled ethertype. MAC Address: {} seen on switch: {}",
+//                            eth.getSourceMACAddress().toString(),
+//                            sw.getId().toString());
                     /* Unhandled ethertype */
                 }
                 break;
