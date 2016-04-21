@@ -17,7 +17,7 @@ import java.net.*;
  */
 public class FLReport {
 
-    private static String ServerIP = "127.0.0.1";
+    private static String ServerIP = "192.168.109.213";
     private static int ServerPort = 7999;
     private static int timeout = 2000; // in ms
 
