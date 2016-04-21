@@ -152,25 +152,18 @@ public class monsModule implements IOFMessageListener, IFloodlightModule {
                             String payload = new String(data.getData());
 //                            logger.info("TCP Payload: {}", payload);
 
+                            // Check "mapOutput" as keyword, if not, DO NOT send POST to Python Controller.
                             if (payload.startsWith("GET /mapOutput?")) {
-                                int firstNewLine = payload.indexOf('\n');
+                                int end = payload.indexOf(" HTTP/1.1");
                                 logger.info("Sending JSON: srcPort: {}, payload: {}",
                                         srcPort.getPort(),
-                                        payload.substring(15, firstNewLine));
-                            }
+                                        payload.substring(15, end));
 
-                            // TODO: This tcp.getPayload() is not getting desired output.
-                            // Better try on local mininet vm environment AND DEBUG STOP here. More efficient.
-                            //
-                            // On Mininet VM:
-                            // sudo mn --controller=remote --ip=HOST_IP --switch ovsk,protocols=OpenFlow13
-                            // sh ovs-ofctl add-flow s1 in_port=1,actions=controller:pause // add the flow rule and test if the pause option is available on new version ovs
-                            // Test command:
-                            // h1 curl http://of-master:13562/mapOutput?job=job_1461107404635_0002&reduce=0&map=attempt_1461107404635_0002_m_000021_0
-                            //
-                            // Desired output:
-                            // Check "mapOutput" as keyword, if not, DO NOT send POST to Python Controller.
-                            // Get source port (OK), job=job_1461107404635_0002, map=attempt_1461107404635_0002_m_000021_0
+                                // Desired output:
+                                // Source port, job=job_1461107404635_0002, map=attempt_1461107404635_0002_m_000021_0
+
+                                // TODO: Import SDNReport module and send json to PythonCon
+                            }
 
                         }
 
