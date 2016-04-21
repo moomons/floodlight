@@ -142,25 +142,21 @@ public class monsModule implements IOFMessageListener, IFloodlightModule {
                         short flags = tcp.getFlags();
 
                         /* Your logic here! */
-                        logger.info("TCP Packet: sourcePort {}, destPort {}",
-                                srcPort.getPort(),
-                                dstPort.getPort());
+//                        logger.info("TCP Packet: sourcePort {}, destPort {}", srcPort.getPort(), dstPort.getPort()); // Too verbose if this line exist
 
                         if (dstPort.getPort() == 13562) {
-                            logger.info("TCP Packet: destPort 13562 and HTTP GET detected, will send this info to ",
-                                    srcPort.getPort(),
-                                    dstPort.getPort());
+                            logger.info("TCP Packet with srcPort {}, destPort {}. Sending to PythonCon",
+                                    srcPort.getPort(), dstPort.getPort());
 
-//                            Data data = (Data) tcp.getPayload();
+                            Data data = (Data) tcp.getPayload();
 
-                            Data pktData = null;
-                            IPacket payloadPkt = tcp.getPayload();
-                            if (payloadPkt != null && payloadPkt instanceof Data) {
-                                pktData = (Data) payloadPkt;
-                            }
+//                            Data pktData = null;
+//                            IPacket payloadPkt = tcp.getPayload();
+//                            if (payloadPkt != null && payloadPkt instanceof Data) {
+//                                pktData = (Data) payloadPkt;
+//                            }
 
-                            logger.info("TCP Payload: {}",
-                                    Arrays.toString(pktData.getData()));
+                            logger.info("TCP Payload: {}", Arrays.toString(data.getData()));
 
                             // TODO: This tcp.getPayload() is not getting desired output.
                             // Better try on local mininet vm environment AND DEBUG STOP here. More efficient.
