@@ -37,7 +37,7 @@ public class FLReport {
         System.out.println("Connection possible: " + portAvailable);
     }
 
-    public static void doPost(int srcPort, String payload) {
+    public static void doPost(int srcPort, String payload, String srcIP) {
 
         try {
             URL url = new URL("http://" + ServerIP + ":" + Integer.toString(ServerPort));
@@ -71,8 +71,9 @@ public class FLReport {
             String input = "{" +
                     "\"srcPort\": " + srcPort + ", " +
                     "\"para_job\": \"" + parajob + "\", " +
-                    "\"para_reduce\": " + parareduce + ", " +
                     "\"para_map\": \"" + paramap + "\"" +
+                    "\"ip_dst\": \"" + srcIP + "\"" +
+                    "\"para_reduce\": " + parareduce + ", " +
                     "}";
 
             OutputStream os = conn.getOutputStream();

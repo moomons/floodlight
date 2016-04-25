@@ -125,6 +125,7 @@ public class monsModule implements IOFMessageListener, IFloodlightModule {
 
                     /* Various getters and setters are exposed in IPv4 */
                     byte[] ipOptions = ipv4.getOptions();
+                    IPv4Address srcIp = ipv4.getSourceAddress();
                     IPv4Address dstIp = ipv4.getDestinationAddress();
 
                     /*
@@ -162,7 +163,7 @@ public class monsModule implements IOFMessageListener, IFloodlightModule {
 
                                 // Import SDNReport module and send json to PythonCon
                                 // mons: Code to play with the SDN
-                                FLReport.doPost(srcPort.getPort(), pltosend);
+                                FLReport.doPost(srcPort.getPort(), pltosend, srcIp.toString());
                                 // mons: Code END
                             }
 
