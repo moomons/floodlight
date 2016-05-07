@@ -163,7 +163,9 @@ public class monsModule implements IOFMessageListener, IFloodlightModule {
 
                                 // Import SDNReport module and send json to PythonCon
                                 // mons: Code to play with the SDN
-                                FLReport.doPost(srcPort.getPort(), pltosend, srcIp.toString());
+                                if (FLReport.doPost(srcPort.getPort(), pltosend, srcIp.toString()) == false) {
+                                    logger.info("PyCon not ready.");
+                                }
                                 // mons: Code END
                             }
 

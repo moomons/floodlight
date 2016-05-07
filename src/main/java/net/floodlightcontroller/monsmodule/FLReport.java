@@ -37,7 +37,7 @@ public class FLReport {
         System.out.println("Connection possible: " + portAvailable);
     }
 
-    public static void doPost(int srcPort, String payload, String srcIP) {
+    public static boolean doPost(int srcPort, String payload, String srcIP) {
 
         try {
             URL url = new URL("http://" + ServerIP + ":" + Integer.toString(ServerPort));
@@ -92,10 +92,17 @@ public class FLReport {
             conn.disconnect();
         } catch (SocketTimeoutException e) {
             System.out.println("Timeout.");
+            return false;
+        } catch (java.net.ConnectException e) {
+            System.out.println("Connection error. PyCon HTTP Server thread not ready.");
+            return false;
         } catch (MalformedURLException e) {
             e.printStackTrace();
+            return false;
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
 }
