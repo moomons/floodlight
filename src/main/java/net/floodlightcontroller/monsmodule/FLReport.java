@@ -71,8 +71,8 @@ public class FLReport {
             String input = "{" +
                     "\"srcPort\": " + srcPort + ", " +
                     "\"para_job\": \"" + parajob + "\", " +
-                    "\"para_map\": \"" + paramap + "\"" +
-                    "\"ip_dst\": \"" + srcIP + "\"" +
+                    "\"para_map\": \"" + paramap + "\", " +
+                    "\"ip_dst\": \"" + srcIP + "\", " +
                     "\"para_reduce\": " + parareduce + ", " +
                     "}";
 
