@@ -4,9 +4,20 @@
       <pattern>%date{yyyy-MM-dd HH:mm:ss.S} %-5level [%logger{15}] %msg%n</pattern>
     </encoder>
   </appender>
+
+  <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+    <file>DebugWithPyCon.log</file>
+    <append>true</append>
+    <encoder>
+      <pattern>%date{HH:mm:ss.S} %-5level [%logger{15}] %msg%n</pattern>
+    </encoder>
+  </appender>
+
   <root level="DEBUG">
     <appender-ref ref="STDOUT" />
+    <appender-ref ref="FILE" />
   </root>
+  
   <logger name="io" level="INFO"></logger> <!-- Netty logging -->
   <logger name="LogService" level="DEBUG"/> <!-- Restlet access logging -->
   <logger name="net.floodlightcontroller" level="INFO"/>
