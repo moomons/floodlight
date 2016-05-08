@@ -138,7 +138,7 @@ public class monsModule implements IOFMessageListener, IFloodlightModule {
                         /* We got a TCP packet; get the payload from IPv4 */
                         TCP tcp = (TCP) ipv4.getPayload();
 
-                        logger.info("Length of the following TCP Packet: " + tcp.getTotalLength());
+                        logger.info("!! Length of the following TCP Packet: {}", tcp.getTotalLength());
 
                         /* Various getters and setters are exposed in TCP */
                         TransportPort srcPort = tcp.getSourcePort();
