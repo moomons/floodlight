@@ -153,6 +153,8 @@ public class monsModule implements IOFMessageListener, IFloodlightModule {
                             Data data = (Data) tcp.getPayload();
                             String payload = new String(data.getData());
 
+                            if (payload.length() == 0) return Command.CONTINUE;
+
                             logger.info("!! Length of Payload: {}", payload.length());
 //                            logger.info("TCP Payload: {}", payload);
 
