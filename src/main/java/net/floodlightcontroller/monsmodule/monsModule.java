@@ -138,8 +138,6 @@ public class monsModule implements IOFMessageListener, IFloodlightModule {
                         /* We got a TCP packet; get the payload from IPv4 */
                         TCP tcp = (TCP) ipv4.getPayload();
 
-                        logger.info("!! Length of the following TCP Packet: {}", tcp.getTotalLength());
-
                         /* Various getters and setters are exposed in TCP */
                         TransportPort srcPort = tcp.getSourcePort();
                         TransportPort dstPort = tcp.getDestinationPort();
@@ -154,6 +152,8 @@ public class monsModule implements IOFMessageListener, IFloodlightModule {
 
                             Data data = (Data) tcp.getPayload();
                             String payload = new String(data.getData());
+
+                            logger.info("!! Length of Payload: {}", payload.length());
 //                            logger.info("TCP Payload: {}", payload);
 
                             // Check "mapOutput" as keyword, if not, DO NOT send POST to Python Controller.
