@@ -108,6 +108,7 @@ public class monsModule implements IOFMessageListener, IFloodlightModule {
 
         switch (msg.getType()) {
             case PACKET_IN:
+
                 /* Retrieve the deserialized packet in message */
                 Ethernet eth = IFloodlightProviderService.bcStore.get(cntx, IFloodlightProviderService.CONTEXT_PI_PAYLOAD);
 
@@ -122,6 +123,8 @@ public class monsModule implements IOFMessageListener, IFloodlightModule {
                 if (eth.getEtherType() == EthType.IPv4) {
                     /* We got an IPv4 packet; get the payload from Ethernet */
                     IPv4 ipv4 = (IPv4) eth.getPayload();
+
+                    logger.info("Length of the following IPv4 Packet: " + ipv4.getTotalLength());
 
                     /* Various getters and setters are exposed in IPv4 */
                     byte[] ipOptions = ipv4.getOptions();
