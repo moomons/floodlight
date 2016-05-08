@@ -124,8 +124,6 @@ public class monsModule implements IOFMessageListener, IFloodlightModule {
                     /* We got an IPv4 packet; get the payload from Ethernet */
                     IPv4 ipv4 = (IPv4) eth.getPayload();
 
-                    logger.info("Length of the following IPv4 Packet: " + ipv4.getTotalLength());
-
                     /* Various getters and setters are exposed in IPv4 */
                     byte[] ipOptions = ipv4.getOptions();
                     IPv4Address srcIp = ipv4.getSourceAddress();
@@ -139,6 +137,8 @@ public class monsModule implements IOFMessageListener, IFloodlightModule {
                     if (ipv4.getProtocol().equals(IpProtocol.TCP)) {
                         /* We got a TCP packet; get the payload from IPv4 */
                         TCP tcp = (TCP) ipv4.getPayload();
+
+                        logger.info("Length of the following TCP Packet: " + tcp.getTotalLength());
 
                         /* Various getters and setters are exposed in TCP */
                         TransportPort srcPort = tcp.getSourcePort();
